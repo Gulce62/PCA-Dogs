@@ -8,13 +8,13 @@ import PCA as p
 
 def plotPVE(listPVE, colorName):
     # Plot the PVE vs PC graph
+    plt.figure()
     title = 'PVE vs. Principal Component for ' + colorName
     plt.title(title)
     plt.xlabel('Principal Component')
     plt.ylabel('Portion of Variance Explained')
     x = np.arange(1, len(listPVE)+1, 1)
     plt.plot(x, listPVE, marker='o')
-    plt.show()
 
 
 def getKmin(pca):
@@ -29,8 +29,7 @@ def getKmin(pca):
     return k
 
 
-#absolutePath = input('Enter the path location: ')
-absolutePath = r'C:\Users\gulce\Desktop\EEE 8TH SEMESTER\CS 464\Homeworks\HW2\afhq_dog'
+absolutePath = input('Enter the path location: ')
 # Check if the OS path of the folder exists
 try:
     X = np.empty((len(os.listdir(absolutePath)), 4096, 3))
@@ -102,7 +101,6 @@ for i in range(0, 5):
 for i in range(0, 5):
     axs[1, i].title.set_text('PC ' + str(i+6))
     axs[1, i].imshow(normalized_PCs[i + 5])
-plt.show()
 
 
 def perform(k, originalImg):
@@ -134,8 +132,7 @@ def perform(k, originalImg):
     return dotProduct
 
 
-# imgPath = input('Enter the path location of the image: ')
-imgPath = r'C:\Users\gulce\Desktop\EEE 8TH SEMESTER\CS 464\Homeworks\HW2\afhq_dog\flickr_dog_000002.jpg'
+imgPath = input('Enter the path location of the image: ')
 # Check if the OS path of the image is valid
 try:
     originalImage = Image.open(imgPath)
@@ -147,14 +144,12 @@ except Exception:
 plt.figure()
 plt.title('Original Image')
 plt.imshow(originalImage)
-plt.show()
 
 originalImg = np.array(originalImage.resize((64, 64), Image.Resampling.BILINEAR))
 # Plot the reshaped original image to 64x64 pixels
 plt.figure()
 plt.title('Original Image in 64x64 pixels')
 plt.imshow(originalImg)
-plt.show()
 
 originalImg = originalImg.reshape((4096, 3))
 k_list = [1, 50, 250, 500, 1000, 4096]  # list of the number of principal components
@@ -165,9 +160,10 @@ c = 0
 for k in k_list:
     reconstructedImage = perform(k, originalImg)  # find the reconstructed image for k principal component
     axs[r, c].imshow(reconstructedImage.astype('uint8'))
-    axs[r, c].title.set_text('Reconstructed Image with ' + str(k) + 'PCs')
-    r += 1
-    if r == 3:
-        r = 0
-        c = 1
+    axs[r, c].title.set_text('Reconstructed Image with ' + str(k) + ' PCs')
+    if c == 1:
+        c = 0
+        r += 1
+    else:
+        c += 1
 plt.show()
